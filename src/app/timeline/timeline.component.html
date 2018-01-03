@@ -1,0 +1,19 @@
+<div id="timeline_container">
+  <div id="toolbox">
+    <div class="back" (click)="toolClick('back')">返回</div>
+    <div class="magnify" (click)="toolClick('magnify')">放大</div>
+    <div class="reduce" (click)="toolClick('reduce')">缩小</div>
+  </div>
+  <div class="baseline"></div>
+  <div class="dragable_container" timeline-drag [timeline]="timeline" [offset]="timeline['offset']">
+    <div *ngFor="let flag of flags; let i=index" timeline-flag [flagposition]="flag['position']" [flag]="flag" [timeline]="timeline"
+      class="timeflag" (click)="clickFlag(i)">
+
+      <div class="marker">marker{{i}}</div>
+      <div class="pole">
+        <div class="poleheader"></div>
+        <div class="polefooter"></div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,89 @@
+#timeline_container{
+
+    position: relative;
+    background: rgb(31,180,250);
+    width: 100%;
+    height: 200px;
+    margin: 300px auto;
+    overflow: hidden;
+    #toolbox{
+        font-size: 12px;
+        $height: 80%;
+        position: absolute;
+        width: 40px;
+        height: $height;
+        top: ((100%-$height)/2);
+        background: rgba(253, 254, 240, 0.8);
+        z-index: 100;
+        .back, .magnify, .reduce{
+            width: 80%;
+            height: 25%;
+            margin: 10px 0 0 3px;
+            background: rgb(31,180,250);
+            text-align: center;
+            line-height: 40px;;
+            cursor: pointer;
+        }
+    }
+    .baseline{
+        position: absolute;
+        height: 100%;
+        width: 2px;
+        left: 50%;
+        background: rgb(0,0,0);
+        z-index: 100;
+    }
+    .dragable_container{
+        cursor: move;
+        position: relative;
+        height: 200px;
+        background: rgba(0, 0, 0, 0.15);
+        .timeflag{
+            cursor: pointer;
+            position: absolute;
+            background: rgba(100, 100, 200, 0.8);
+            .marker{
+                border: #ccc solid 3px;
+                position: absolute;
+                border-radius: 5px;
+                background: rgba(0,0,0,0.2);
+
+                text-align: center;
+                font-size: 18px;
+                line-height: 40px;
+            }
+            .pole{
+                width: 2px;
+                position: relative;
+                height: 200px;
+                background: rgba(0,0,0,0.1);
+                .polefooter{
+                    position: relative;
+                    top: 188px;
+                    left: -2px;
+                    width: 6px;
+                    height: 6px;
+                    border-radius: 3px;
+                    background: rgb(0,0,0);
+                }
+                .poleheader{
+                    position:relative;
+                    top: 0px;
+                    width: 80px;
+                    left: -40px;
+                    height: 6px;
+                    background: rgba(0,0,0,0.6);
+                }
+            }
+        }
+    }
+}
+
+#testbtn{
+    background: rgb(31,180,250);
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 130px;
+    margin: 60px auto;
+}
