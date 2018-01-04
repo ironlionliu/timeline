@@ -28,12 +28,12 @@ export class DragDirective {
             var containerWidth = this.timeline["containerWidth"];
             var offset = this.timeline["offset"];
             if (this.timeline["init"] != true) {
-                this.dragDom.style.width = containerWidth * 3 + 'px';
-                this.dragDom.style.left = -(containerWidth + offset) + 'px';
+                this.dragDom.style.width = containerWidth * this.timeline["dragWidth"] + 'px';
+                this.dragDom.style.left = -(containerWidth * (this.timeline["dragWidth"] - 1) * 0.5 + offset) + 'px';
             } else {
                 this.animate = $(this.dragDom).animate({
-                    width: containerWidth * 3 + 'px',
-                    left: -(containerWidth + offset) + 'px'
+                    width: containerWidth * this.timeline["dragWidth"] + 'px',
+                    left: -(containerWidth * (this.timeline["dragWidth"] - 1) * 0.5 + offset) + 'px'
                 },500);
             }
 

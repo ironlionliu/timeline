@@ -47,8 +47,7 @@ export class TimelineComponent implements OnInit {
       this.timelineData = timelineData;
       this.timeline = timelineData["timeline"];
       this.flags = timelineData["flags"];
-      this.viewModel.initTimeline(this.timelineData);
-      this.viewModel.initFlags(this.timelineData);
+      this.viewModel.renderTimeline(this.timelineData);
       this.timeline["offset"] = 0;
 
     });
@@ -72,7 +71,7 @@ export class TimelineComponent implements OnInit {
     }else if(type == "back"){
       this.renderTimeline();
     }
-    this.viewModel.initFlags(this.timelineData);
+    this.viewModel.renderFlags(this.timelineData);
 
 
     // this.testCount = this.testCount + 1;

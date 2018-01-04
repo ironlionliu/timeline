@@ -3,7 +3,7 @@
     position: relative;
     background: rgb(31,180,250);
     width: 100%;
-    height: 200px;
+    height: 220px;
     margin: 300px auto;
     overflow: hidden;
     #toolbox{
@@ -11,14 +11,14 @@
         $height: 80%;
         position: absolute;
         width: 40px;
-        height: $height;
-        top: ((100%-$height)/2);
+        height: 200px;
+        // top: ((100%-$height)/2);
         background: rgba(253, 254, 240, 0.8);
         z-index: 100;
         .back, .magnify, .reduce{
             width: 80%;
             height: 25%;
-            margin: 10px 0 0 3px;
+            margin: 12px 0 0 3px;
             background: rgb(31,180,250);
             text-align: center;
             line-height: 40px;;
@@ -27,7 +27,7 @@
     }
     .baseline{
         position: absolute;
-        height: 100%;
+        height: 200px;
         width: 2px;
         left: 50%;
         background: rgb(0,0,0);
@@ -35,47 +35,72 @@
     }
     .dragable_container{
         cursor: move;
-        position: relative;
-        height: 200px;
-        background: rgba(0, 0, 0, 0.15);
-        .timeflag{
-            cursor: pointer;
+        position: absolute;
+        height: 220px;
+        .rulermarker{
+            font-size: 12px;
             position: absolute;
-            background: rgba(100, 100, 200, 0.8);
-            .marker{
-                border: #ccc solid 3px;
+            bottom: 0px;
+            z-index: 1000;
+            height: 12px;
+            line-height: 12px;
+            color: rgb(255,255,255);
+            text-align: center;
+            left: 50%;
+            
+            &::after{
+                content:"";
                 position: absolute;
-                border-radius: 5px;
-                background: rgba(0,0,0,0.2);
-
-                text-align: center;
-                font-size: 18px;
-                line-height: 40px;
-            }
-            .pole{
-                width: 2px;
-                position: relative;
-                height: 200px;
-                background: rgba(0,0,0,0.1);
-                .polefooter{
-                    position: relative;
-                    top: 188px;
-                    left: -2px;
-                    width: 6px;
-                    height: 6px;
-                    border-radius: 3px;
-                    background: rgb(0,0,0);
-                }
-                .poleheader{
-                    position:relative;
-                    top: 0px;
-                    width: 80px;
-                    left: -40px;
-                    height: 6px;
-                    background: rgba(0,0,0,0.6);
-                }
+                background: rgb(255,255,255);
+                width:3px;
+                height: 8px;
+                bottom: 15px;
+                left: 50%;
+                
             }
         }
+        .flagwraper{
+            background:rgba(0,0,0,0.1);
+            height:200px;
+            .timeflag{
+                cursor: pointer;
+                position: absolute;
+                background: rgba(100, 100, 200, 0.8);
+                .marker{
+                    border: #ccc solid 3px;
+                    position: absolute;
+                    border-radius: 5px;
+                    background: rgba(0,0,0,0.2);
+
+                    text-align: center;
+                    font-size: 18px;
+                    line-height: 40px;
+                }
+                .pole{
+                    width: 2px;
+                    position: relative;
+                    height: 200px;
+                    background: rgba(0,0,0,0.1);
+                    .polefooter{
+                        position: relative;
+                        top: 188px;
+                        left: -2px;
+                        width: 6px;
+                        height: 6px;
+                        border-radius: 3px;
+                        background: rgb(0,0,0);
+                    }
+                    .poleheader{
+                        position:relative;
+                        top: 0px;
+                        width: 80px;
+                        left: -40px;
+                        height: 6px;
+                        background: rgba(0,0,0,0.6);
+                    }
+                }
+        }
+    }
     }
 }
 

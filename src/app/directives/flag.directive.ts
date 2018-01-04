@@ -15,6 +15,7 @@ export class FlagDirective implements OnInit {
     private animate = [];
     private marker;
     private pole;
+    private 
     private init = false;
     constructor(
         private ele: ElementRef
@@ -44,6 +45,9 @@ export class FlagDirective implements OnInit {
         }
 
     }
+    private renderRuler(){
+        
+    }
     private renderFlag() {
 
         console.log('2');
@@ -51,9 +55,6 @@ export class FlagDirective implements OnInit {
         if(this.animate.length > 0){
             this.animate.forEach((animation)=>{animation.stop()});
         }
-
-        // this.eleDom.css("left",this.flag["position"]);
-        // this.marker.css("top",this.flag["layer"]);
         
         if (this.init != true) {
             this.eleDom.css("left",this.flag["position"]);
