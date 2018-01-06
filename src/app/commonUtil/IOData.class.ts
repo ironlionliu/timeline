@@ -3,14 +3,13 @@ import { Observable } from 'rxjs/Observable';
 
 export class IOData{
     private ioData;
-    private genUrl(){
-        let url = "/timeline/time.json";
+    private genUrl(fileID){
+        let url = "/timeline/" + fileID;
         return url;
     }
     
-    public httpGetData(getData):Observable<any>{
-        let url = this.genUrl();
-        let getDataStr = JSON.stringify(getData);
+    public httpGetData(fileID):Observable<any>{
+        let url = this.genUrl(fileID);
         return this.http.get(
             url,
             {

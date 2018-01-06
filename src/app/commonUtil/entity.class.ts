@@ -10,8 +10,8 @@ export class entity{
 
     public init(){}
     public update(){}
-    public getEntity(){
-        return this.IOData.httpGetData();
+    public getEntity(fileID){
+        return this.IOData.httpGetData(fileID);
     }
     constructor(
         private http: HttpClient,

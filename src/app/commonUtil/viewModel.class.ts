@@ -11,8 +11,8 @@ export class viewModel {
         "middle": null,
         "bottom": null
     }
-    public getEntity(): Observable<any> {
-        return this.entity.getEntity();
+    public getEntity(fileID): Observable<any> {
+        return this.entity.getEntity(fileID);
     }
 
     public renderTimeline(timelineData) {
@@ -23,12 +23,12 @@ export class viewModel {
 
         timeline["flagHeight"] = timeline["containerHeight"] * 0.95 * 0.65 / 3;
         timeline["flagMargin"] = timeline["containerHeight"] * 0.9 * 0.35 / 4;
-        
+
         this.flagLayer["middle"] = timeline["flagMargin"] * 2 + timeline["flagHeight"];
         this.flagLayer["top"] = timeline["flagMargin"];
         this.flagLayer["bottom"] = timeline["flagMargin"] * 3 + timeline["flagHeight"] * 2;
         this.renderFlags(timelineData);
-        
+
 
     }
     public renderFlags(timelineData) {
@@ -44,81 +44,100 @@ export class viewModel {
 
         this.setRows(flags, timeline);
         this.renderRulerMarkers(timelineData);
-        console.log(timeline["rulerMarkers"]);
     }
 
     private renderRulerMarkers(timelineData) {
         var timeline = timelineData["timeline"];
         var flags = timelineData["flags"];
         this.sortFlags(flags);
-        this.genRulerMarkerTime(timeline,flags);
+        this.genRulerMarkerTime(timeline, flags);
     }
 
-    private genRulerMarkerTime(timeline,flags){
+    private genRulerMarkerTime(timeline, flags) {
         //days是半个可视时间轴的长度对应的天数，timeLevel是ruler级别，baseDay是drag块0点对应的时间相距公元零年的天数。
         var days = this.calInterval(flags[0]["time"], flags[flags.length - 1]["time"]);
-        var timeLevel = "century";//century,decade,year,month,day
-        var baseDay = this.calBaseDay(timeline,flags);
-        var daysInterval = days/(timeline["rulerNum"]/timeline["dragWidth"]/2);
-        var rulerMarkers = timeline["rulerMarkers"];
-        if(timeLevel == "century"){
-            let timeOrigin = Math.ceil(baseDay/365/100);
-            let timeNext = Math.round((baseDay + daysInterval)/365/100);
-            let timeInterval = timeNext - timeOrigin;
-            for(let i = 0; i < timeline["rulerNum"]; i++){
-                let _rulerMarker = {
-                    "time": null,
-                    "position": null
-                };
-                rulerMarkers[i] = _rulerMarker;
-                rulerMarkers[i]["time"] = (timeOrigin + i * timeInterval)*100 + "/1/1";
-                rulerMarkers[i]["position"] = this.time2Position(rulerMarkers[i]["time"],flags,timeline);//rulerMarkers[i]["time"] * timeline["ruler"];
-            }
 
-        }else if(timeLevel == "decade"){
-            let timeOrigin = Math.ceil(baseDay/365/10);
-            let timeNext = Math.round((baseDay + daysInterval)/365/10);
-            let timeInterval = timeNext - timeOrigin;
-            for(let i = 0; i < timeline["rulerNum"]; i++){
-                rulerMarkers[i]["time"] = timeOrigin + i * timeInterval;
-                rulerMarkers[i]["position"] = this.time2Position(rulerMarkers[i]["time"],flags,timeline);//rulerMarkers[i]["time"] * timeline["ruler"];
-            }
-        }else if(timeLevel == "year"){
-            let timeOrigin = Math.ceil(baseDay/365);
-            let timeNext = Math.round((baseDay + daysInterval)/365);
-            let timeInterval = timeNext - timeOrigin;
-            for(let i = 0; i < timeline["rulerNum"]; i++){
-                rulerMarkers[i]["time"] = timeOrigin + i * timeInterval;
-                rulerMarkers[i]["position"] = rulerMarkers[i]["time"] * timeline["ruler"];
-            }
-        }else if(timeLevel == "month"){
-            let timeOrigin = Math.ceil(baseDay/365/100);
-            let timeNext = Math.round((baseDay + daysInterval)/365/100);
-            let timeInterval = timeNext - timeOrigin;
-            for(let i = 0; i < timeline["rulerNum"]; i++){
-                rulerMarkers[i]["time"] = timeOrigin + i * timeInterval;
-                rulerMarkers[i]["position"] = rulerMarkers[i]["time"] * timeline["ruler"];
-            }
-        }else if(timeLevel == "day"){
-            let timeOrigin = Math.ceil(baseDay/365/100);
-            let timeNext = Math.round((baseDay + daysInterval)/365/100);
-            let timeInterval = timeNext - timeOrigin;
-            for(let i = 0; i < timeline["rulerNum"]; i++){
-                rulerMarkers[i]["time"] = timeOrigin + i * timeInterval;
-                rulerMarkers[i]["position"] = rulerMarkers[i]["time"] * timeline["ruler"];
-            }
+        var timeLevel = null;
+        if(days >= 365*100){
+            timeLevel = "century"
+        }else if(days >= 365*50){
+            timeLevel = "fiftyyear";
+        }else if(days >= 365*20){
+            timeLevel = "tweentyyear";
+        }else if(days >= 365*10){
+            timeLevel = "decade";
+        }else if(days >= 365){
+            timeLevel = "year";
+        }else if(days >= 30){
+            timeLevel = "month";
+        }else if(days >= 1){
+            timeLevel = "day"
+        }
+
+        
+        var baseDay = this.calBaseDay(timeline, flags);
+
+        console.log(timeline["factor"]);
+        var daysInterval = days / (timeline["rulerNum"] / timeline["dragWidth"] / 2);
+        var rulerMarkers = timeline["rulerMarkers"];
+        var level2scale = {
+            "century": 100,
+            "fiftyyear": 50,
+            "tweentyyear": 20,
+            "decade": 10,
+            "year": 1,
+            "month": 1 / 12,
+            "day": 1 / 365
+        };
+        var scale = level2scale[timeLevel];
+        let timeOrigin = Math.ceil(baseDay / 365 / scale);
+        let timeNext = Math.round((baseDay + daysInterval) / 365 / scale);
+        let timeInterval = timeNext - timeOrigin;
+        for (let i = 0; i < timeline["rulerNum"]; i++) {
+            let _rulerMarker = {
+                "time": null,
+                "position": null,
+                "content": null
+            };
+            rulerMarkers[i] = _rulerMarker;
+            rulerMarkers[i]["time"] = (timeOrigin + i * timeInterval) * scale + "/1/1";
+            rulerMarkers[i]["position"] = this.time2Position(rulerMarkers[i]["time"], flags, timeline);//rulerMarkers[i]["time"] * timeline["ruler"];
+            rulerMarkers[i]["content"] = this.time2Display(rulerMarkers[i]["time"]);
         }
     }
-    private calBaseDay(timeline,flags){
+
+    private time2Display(timeStr){
+        var timeArr = timeStr.split("/");
+
+        var year = parseInt(timeArr[0]);
+        var month = parseInt(((timeArr[0] - year)*12).toString());
+        var day = parseInt((((timeArr[0] - year)*12 - month)*30).toString());
+        var content = null;
+        if(year!=0&&month == 0){
+            if(year < 0){
+                content = "公元前";
+                year = -year;
+            }
+            content = content + year + "年";
+        }
+        if(month!=0){
+            content = month + "月";
+        }
+        if(day!=0){
+            content = day + "日";
+        }
+        // var content = year + "年" + month + "月" + day + "日";
+        return content;
+    }
+
+    private calBaseDay(timeline, flags) {
         var days = this.calInterval(flags[0]["time"], flags[flags.length - 1]["time"]);
-        var baseDay = this.calTime(flags[flags.length - 1]["time"]) - days*(timeline["dragWidth"] - 1 + 2);
+        var baseDay = this.calTime(flags[flags.length - 1]["time"]) - days * (timeline["dragWidth"] - 1 + 2);
         return baseDay;
     }
 
 
-    private time2Position(time,flags,timeline){
-
-        console.log(time);
+    private time2Position(time, flags, timeline) {
         let baseTime = flags[0]["time"];
         let position = timeline["containerWidth"] * 0.5 * timeline["dragWidth"] + this.calInterval(baseTime, time) * this.ruler;
         return position;
@@ -131,8 +150,8 @@ export class viewModel {
             flag["position"] = this.time2Position(flag["time"], flags, timeline);
             if (index > 0 && this.calInterval(flags[index - 1]["time"], flag["time"]) * this.ruler < timeline["flagWidth"]) {
                 if (index > 1 && this.calInterval(flags[index - 2]["time"], flag["time"]) * this.ruler < timeline["flagWidth"]) {
-                    flag["row"] = this.restRow(flags[index - 1]["row"],flags[index - 2]["row"]);
-                }else{
+                    flag["row"] = this.restRow(flags[index - 1]["row"], flags[index - 2]["row"]);
+                } else {
                     flag["row"] = this.nextRow(flags[index - 1]["row"]);
                 }
             } else {
@@ -142,13 +161,13 @@ export class viewModel {
         });
     }
     private restRow(row1, row2) {
-        var rows = ["middle","top","bottom"];
+        var rows = ["middle", "top", "bottom"];
         let index = 3 - rows.indexOf(row1) - rows.indexOf(row2);
         return rows[index];
     }
-    private nextRow(row){
-        var rows = ["middle","top","bottom"];
-        let index = (rows.indexOf(row) + 1)%3;
+    private nextRow(row) {
+        var rows = ["middle", "top", "bottom"];
+        let index = (rows.indexOf(row) + 1) % 3;
         return rows[index];
     }
 
@@ -160,21 +179,21 @@ export class viewModel {
 
     }
 
-    private sortFlags(flags){
+    private sortFlags(flags) {
         flags.sort((flag1, flag2) => {
             return this.calTime(flag1["time"]) - this.calTime(flag2["time"]);
         });
         return flags;
     }
 
-    
+
     /*interval单位是天*/
     private calInterval(time1, time2) {
         return this.calTime(time2) - this.calTime(time1);
     }
     private calTime(time) {
         let timearr = time.split("/");
-        let timefloat = timearr[0] * 365 + timearr[1] * 30 + timearr[2]*1;
+        let timefloat = timearr[0] * 365 + timearr[1] * 30 + timearr[2] * 1;
         return timefloat;
     }
     /*  一天对应的长度（day=>left） */
@@ -183,7 +202,7 @@ export class viewModel {
         let ruler = timeWidth / (this.calInterval(flags[0]["time"], flags[flags.length - 1]["time"]));
         return ruler;
     }
-    
+
     constructor(
         private http: HttpClient,
         private httpHeaders: HttpHeaders

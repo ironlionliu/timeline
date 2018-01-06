@@ -20,21 +20,23 @@ export class FlagDirective implements OnInit {
     constructor(
         private ele: ElementRef
     ) {
+        
+        
         this.eleDom = $(this.ele.nativeElement);
-        // this.eleDom = this.ele.nativeElement;
         this.eleDom.css("left","0px");
+        
+        
     }
     ngOnInit() {
+        
+        
         this.marker = $(this.eleDom).children('div.marker');
         this.pole = $(this.eleDom).children('div.pole');
         this.marker.css("top",this.flag["layer"] + 'px');
-
-
-        // this.marker[0].style.left = this.flag["layer"] + 'px';
-
         this.marker.width(this.timeline["flagWidth"]);
         this.marker.height(this.timeline["flagHeight"]);
         this.init = true;
+        
     }
     @Input('timeline') timeline;
     @Input('flag') flag;
@@ -50,7 +52,6 @@ export class FlagDirective implements OnInit {
     }
     private renderFlag() {
 
-        console.log('2');
 
         if(this.animate.length > 0){
             this.animate.forEach((animation)=>{animation.stop()});

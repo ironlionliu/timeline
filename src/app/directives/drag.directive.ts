@@ -1,9 +1,10 @@
 import { Directive, ElementRef, HostListener, Input } from '@angular/core';
 import * as $ from 'jquery';
+import { OnInit } from '_@angular_core@4.4.6@@angular/core/src/metadata/lifecycle_hooks';
 @Directive({
     selector: '[timeline-drag]',
 })
-export class DragDirective {
+export class DragDirective implements OnInit{
     private dragging = false;
     private mouseOldX = -1;
     private mouseOldY = -1;
@@ -13,9 +14,14 @@ export class DragDirective {
     constructor(
         private ele: ElementRef
     ) {
+        
         this.dragDom = this.ele.nativeElement;
 
 
+    }
+
+    ngOnInit(){
+       
     }
     @Input('timeline') timeline;
     @Input('offset')
@@ -36,13 +42,6 @@ export class DragDirective {
                     left: -(containerWidth * (this.timeline["dragWidth"] - 1) * 0.5 + offset) + 'px'
                 },500);
             }
-
-
-
-
-
-
-
 
         }
 

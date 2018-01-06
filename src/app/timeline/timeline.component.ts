@@ -19,40 +19,44 @@ export class TimelineComponent implements OnInit {
   private flags = [];
   private timeline = {};
 
+  private testID = 1;
+
 
   private viewModel;
   constructor(
     private http: HttpClient
   ) {
-    
-    // this.testData = JSON.stringify({test:"test"});
-    this.init();
-    this.renderTimeline();
-    
-  }
-  ngOnInit() {
-    console.log("nginit");
-  }
-  private init() {
     let httpHeaders = new HttpHeaders();
     this.viewModel = new viewModel(this.http, httpHeaders);
+    this.renderTimeline();
+  }
+  ngOnInit() {
 
-    // console.log(timelineConfig["timelineConfig"]);
+  }
+  private init() {
     this.timelineData = timelineConfig["timelineConfig"];
     this.timeline = this.timelineData["timeline"];
     this.flags = this.timelineData["flags"];
+
+    this.timeline["offset"] = 0;
+    this.viewModel.renderTimeline(this.timelineData);
+
+
   }
-  private renderTimeline(){
-    this.viewModel.getEntity().subscribe(timelineData => {
+  private renderTimeline() {
+    this.viewModel.getEntity("time" + this.testID + ".json").subscribe(timelineData => {
       this.timelineData = timelineData;
       this.timeline = timelineData["timeline"];
       this.flags = timelineData["flags"];
       this.viewModel.renderTimeline(this.timelineData);
       this.timeline["offset"] = 0;
-
     });
   }
-  clickFlag(index) {
+  public clickFlag(index) {
+    this.goToFlag(index);
+  }
+
+  private goToFlag(index) {
     this.timeline["activeFlag"] = index;
     this.timeline["offset"] = this.timeline["offset"] - this.flags[this.timeline["activeFlag"]]["position"];
     this.viewModel.positionFlags(this.timelineData);
@@ -60,21 +64,16 @@ export class TimelineComponent implements OnInit {
   }
 
 
-
-
   toolClick(type) {
-  
     if (type == "magnify") {
-      this.timelineData["timeline"]["ruler"] = this.timelineData["timeline"]["ruler"] * 1.5;
+      this.timelineData["timeline"]["ruler"] = this.timelineData["timeline"]["ruler"] * 1.6;
     } else if (type == "reduce") {
-      this.timelineData["timeline"]["ruler"] = this.timelineData["timeline"]["ruler"] / 1.5;
-    }else if(type == "back"){
+      this.timelineData["timeline"]["ruler"] = this.timelineData["timeline"]["ruler"] / 1.6;
+    } else if (type == "back") {
+      this.testID = (this.testID + 1) % 5;
+
       this.renderTimeline();
     }
     this.viewModel.renderFlags(this.timelineData);
-
-
-    // this.testCount = this.testCount + 1;
-    // this.testData["test"] = this.testData["test"] + 1;
   }
 }
